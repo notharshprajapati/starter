@@ -1,9 +1,26 @@
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-export function Drone(props) {
-  const { nodes, materials } = useGLTF("/assets/models/drone.glb");
+import { applyProps } from "@react-three/fiber";
+import { MeshStandardMaterial } from "three";
 
-  //ref
+export function Drone(props) {
+  const { nodes, materials } = useGLTF("/drone.glb");
+  applyProps(materials.red, {
+    emissiveIntensity: 5,
+    toneMapped: false,
+  });
+  applyProps(materials.blue, {
+    emissiveIntensity: 5,
+    toneMapped: false,
+  });
+  const glassMaterial = new MeshStandardMaterial({
+    color: "#000", // Set the color of the glass
+    metalness: 1,
+    roughness: 0.5,
+    transparent: true, // Enable transparency
+    opacity: 0.9, // Set the opacity level (adjust as needed)
+  });
+  //refs
   const body = useRef();
   const bodRot = useRef();
   const wing1 = useRef();
@@ -15,9 +32,9 @@ export function Drone(props) {
     <group {...props} dispose={null} ref={body}>
       <group ref={bodRot}>
         <mesh
+          castShadow
           geometry={nodes.body.geometry}
           material={materials.body}
-          castShadow
         >
           <mesh
             geometry={nodes.blue.geometry}
@@ -88,11 +105,11 @@ export function Drone(props) {
           </group>
           <mesh geometry={nodes.red.geometry} material={materials.red} />
           <mesh geometry={nodes.tail_1.geometry} material={materials.cam} />
-          <mesh geometry={nodes.tail_2.geometry} material={materials.tail} />
+          <mesh geometry={nodes.tail_2.geometry} material={glassMaterial} />
         </mesh>
       </group>
     </group>
   );
 }
 
-useGLTF.preload("/assets/models/drone.glb");
+useGLTF.preload("/drone.glb");

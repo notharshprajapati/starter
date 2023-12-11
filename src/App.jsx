@@ -1,19 +1,34 @@
 import React from "react";
 import { Drone } from "./Drone";
-import { Environment, PerspectiveCamera, Plane } from "@react-three/drei";
+import { Reflector } from "@react-three/drei";
 
 function App() {
   return (
     <>
-      <Environment background={true} files={"assets/textures/envmap.hdr"} />
-      <PerspectiveCamera makeDefault position={[0, 1, 5]} />
-      <Drone castShadow receiveShadow />
-      <pointLight intensity={1} position={[0, 2, 0]} castShadow />
-      <Plane receiveShadow scale={[10, 10, 10]} rotation={[-Math.PI / 2, 0, 0]}>
-        <meshStandardMaterial />
-      </Plane>
+      <Drone />
+      <Ground />
+      <ambientLight intensity={0.5} />
+      <spotLight position={[0, 10, 0]} intensity={0.3} />
+      <directionalLight position={[-50, 0, -40]} intensity={0.7} />
     </>
   );
 }
 
 export default App;
+function Ground() {
+  return (
+    <Reflector
+      blur={[1, 1]}
+      resolution={512 * 4}
+      args={[10, 10]}
+      mirror={1}
+      mixBlur={2}
+      mixStrength={50}
+      rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+    >
+      {(Material, props) => (
+        <Material color="#111" roughness={0.25} {...props} />
+      )}
+    </Reflector>
+  );
+}
