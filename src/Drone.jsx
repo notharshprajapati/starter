@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei";
 export function Drone(props) {
   const { nodes, materials } = useGLTF("/assets/models/drone.glb");
 
-  //refs
+  //ref
   const body = useRef();
   const bodRot = useRef();
   const wing1 = useRef();
